@@ -1,0 +1,69 @@
+<tool id="cutadapt2" name="Trim primers">
+<description>Cutadapt primer trimmer</description>
+<command interpreter="bash">
+cutadapt.sh
+$input<!--zip file input-->
+$type<!--input type, fastq or gz-->
+	#if $setting_mode.mode == "normal"
+	$setting_mode.mode
+	$setting_mode.error_rate<!--max error rate-->
+	$setting_mode.forward_primer<!--forward primer sequence-->
+	$setting_mode.reverse_primer<!--reverse primer sequence-->
+	$setting_mode.min_length<!--minimum length-->
+	#else
+	$setting_mode.mode
+	'$setting_mode.command_parameters'
+	#end if
+$output_zip<!--output zip-->
+$output_log<!--output log-->
+</command>
+<macros>
+	<macro name="advanced">
+		<param name="command_parameters" type="text" size="9999" optional="true" label="cutadapt commandline parameters" />
+	</macro>
+	<macro name="normal">
+		<param name="error_rate" type="float" label="maximum allowed error rate for primer trimming"  value="0.2" min="0.0" max="1"/>
+		<param name="forward_primer" type="text" size="30" label="Forward primer sequence" />
+		<param name="reverse_primer" type="text" size="30" label="Reverse primer sequence," />
+		<param name="min_length" type="integer" label="Minimum read length for output" value="100" min="0" max="1000"/>
+	</macro>
+</macros>
+<inputs>
+<param format="zip" name="input" type="data" label="zip file containing fasta or fastq files"/>
+
+				<param name="type" type="select" multiple="false" label="Input type">
+					<option value="gz">gzip files</option>
+					<option value="FASTQ" selected="true">fastq files</option>
+				</param>
+					<conditional name="setting_mode">
+					<param name="mode" type="select" multiple="false" label="Settings mode">
+						<option value="normal" selected="true">Normal</option>
+						<option value="command_line">Advanced (commandline parameters)</option>
+					</param>
+					<when value="normal">
+
+						<expand macro="normal"/>
+					</when>
+						<when value="command_line">
+						<expand macro="advanced"/>
+					</when>
+				</conditional>
+
+
+</inputs>
+
+	
+<outputs>
+	<data format="zip" type="data" name="output_zip" label="$input.display_name zip" />
+	<data format="txt" name="output_log" label="$input.display_name log" />
+</outputs>
+<tests>
+<test>
+<param name="test_input" value="test_input.txt"/>
+<output name="test_outout" file="test_output.txt"/>
+</test>
+</tests>
+<help>
+Trim primers
+</help>
+</tool>
