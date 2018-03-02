@@ -1,4 +1,4 @@
-Wrapper for cutadapt.
+Wrapper for cutadapt
 
 Source:
 

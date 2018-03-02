@@ -4,8 +4,7 @@ Marten Hoogeveen    marten.hoogeveen@naturalis.nl V1.0
 
 This script is made for the Naturalis galaxy instance and is a wrapper for the tool cutadapt.(https://github.com/marcelm/cutadapt)
 Cutadapt finds and removes adapter sequences, primers, poly-A tails and other types of unwanted sequence from your high-throughput sequencing reads.
-The wrapper is made so it can process zip files containing multiple fastq files.
-
+The wrapper is made so it can process zip files containing multiple fastq files
 """
 import sys, os, argparse
 import glob
