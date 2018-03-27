@@ -36,6 +36,9 @@ requiredArguments.add_argument('-o', '--output', metavar='output', dest='out', t
                                help='Output in zip format', required=True, nargs='?', default="")
 requiredArguments.add_argument('-ol', '--output_log', metavar='output_log', dest='out_log', type=str,
                                help='output log file', required=True, nargs='?', default="")
+#output folder
+requiredArguments.add_argument('-of', '--folder_output', metavar='folder output', dest='out_folder', type=str,
+                               help='Folder name for the output files', required=True)
 
 args = parser.parse_args()
 
@@ -48,6 +51,7 @@ def admin_log(tempdir, out=None, error=None, function=""):
             adminlogfile.write("error " + function + "\n" + seperation + "\n" + error + "\n\n")
 
 def make_output_folders(tempdir):
+    call(["mkdir", "-p", tempdir])
     call(["mkdir", tempdir + "/files"])
     call(["mkdir", tempdir + "/output"])
 
@@ -77,22 +81,28 @@ def cutadapt(tempdir):
     for file in fq_filetypes:
         files.extend([os.path.basename(x) for x in sorted(glob.glob(file))])
     for x in files:
+        output_name = os.path.splitext(x)[0]+"_trimmed.fastq"
         if args.advanced:
-            command = args.command_line.split(" ")
-            base_command = ["cutadapt", "-o", tempdir + "/output/" + x]
-            base_command.extend(command)
-            base_command.append(tempdir + "/files/" + x)
-            out, error = Popen(base_command, stdout=PIPE,stderr=PIPE).communicate()
+            if "|" in command:
+                admin_log(tempdir, error="pipe sign not allowed", function="cutadapt")
+            else:
+                command = args.command_line.split(" ")
+                base_command = ["cutadapt", "-o", tempdir + "/output/" + x]
+                base_command.extend(command)
+                base_command.append(tempdir + "/files/" + x)
+                out, error = Popen(base_command, stdout=PIPE,stderr=PIPE).communicate()
         else:
-            out, error = Popen(["cutadapt","-a",args.forward_primer+"..."+args.reverse_primer,"-e", args.error_rate ,"--trimmed-only", "-m", args.min_length , "-o", tempdir+"/output/"+x, tempdir+"/files/"+x], stdout=PIPE, stderr=PIPE).communicate()
+            out, error = Popen(["cutadapt","-a",args.forward_primer+"..."+args.reverse_primer,"-e", args.error_rate ,"--trimmed-only", "-m", args.min_length , "-o", tempdir+"/output/"+output_name, tempdir+"/files/"+x], stdout=PIPE, stderr=PIPE).communicate()
         admin_log(tempdir, out=out, error=error, function="cutadapt")
+        call(["rm", tempdir + "/files/"+x])
 
 def zip_it_up(tempdir):
-    call(["zip","-r","-j", tempdir+".zip", tempdir+"/output/"],stdout=open(os.devnull, 'wb'))
-    call(["mv", tempdir + ".zip", args.out])
+    call(["zip","-r","-j", tempdir+"/trimmed.zip", tempdir+"/output/"],stdout=open(os.devnull, 'wb'))
+    #call(["mv", tempdir + ".zip", args.out])#
 
 def main():
-    tempdir = Popen(["mktemp", "-d", "XXXXXX"], stdout=PIPE, stderr=PIPE).communicate()[0].strip()
+    #tempdir = Popen(["mktemp", "-d", "XXXXXX"], stdout=PIPE, stderr=PIPE).communicate()[0].strip()
+    tempdir = args.out_folder
     make_output_folders(tempdir)
     zip_out, zip_error = Popen(["unzip", args.inzip, "-d", tempdir.strip() + "/files"], stdout=PIPE,stderr=PIPE).communicate()
     admin_log(tempdir, zip_out, zip_error)
@@ -102,11 +112,8 @@ def main():
         changename(tempdir)
         cutadapt(tempdir)
     zip_it_up(tempdir)
-    call(["mv", tempdir + "/adminlog.log", args.out_log])
-    call(["rm", "-rf", tempdir])
-
-
-
+    #call(["mv", tempdir + "/adminlog.log", args.out_log])
+    #call(["rm", "-rf", tempdir])
 
 if __name__ == '__main__':
     main()
