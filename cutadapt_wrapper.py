@@ -32,10 +32,6 @@ requiredArguments.add_argument('-rp', '--reverse_primer', metavar='reverse prime
                                help='Reverse primer that need to be trimmed off', required=True, nargs='?', default="")
 requiredArguments.add_argument('-l', '--min_length', metavar='minimum read length that will be written to the output file', dest='min_length', type=str,
                                help='minimum read length that will be written to the output file', required=True, nargs='?', default="")
-requiredArguments.add_argument('-o', '--output', metavar='output', dest='out', type=str,
-                               help='Output in zip format', required=True, nargs='?', default="")
-requiredArguments.add_argument('-ol', '--output_log', metavar='output_log', dest='out_log', type=str,
-                               help='output log file', required=True, nargs='?', default="")
 #output folder
 requiredArguments.add_argument('-of', '--folder_output', metavar='folder output', dest='out_folder', type=str,
                                help='Folder name for the output files', required=True)
