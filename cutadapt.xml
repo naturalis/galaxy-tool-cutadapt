@@ -1,7 +1,7 @@
-<tool id="cutadapt2V2" name="Trim primers">
-<description>CutadaptV2 primer trimmer</description>
+<tool id="cutadapt" name="Trim primers">
+<description>Cutadapt primer trimmer</description>
 <command interpreter="bash">
-cutadaptV2.sh
+cutadapt.sh
 $input<!--zip file input-->
 $type<!--input type, fastq or gz-->
 	#if $setting_mode.mode == "forward_mode"
