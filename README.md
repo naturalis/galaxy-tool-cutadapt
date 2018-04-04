@@ -22,16 +22,17 @@ cd /home/galaxy/Tools
 sudo git clone https://github.com/naturalis/galaxy-tool-cutadapt
 ```
 ```
-sudo chmod 777 galaxy-tool-flash/cutadapt_wrapper.py
-```
-```
-sudo git clone https://github.com/naturalis/galaxy-tool-cutadapt
+sudo chmod 777 galaxy-tool-cutadapt/cutadapt_wrapper.py
 ```
 ```
 sudo ln -s /home/galaxy/Tools/galaxy-tool-cutadapt/cutadapt_wrapper.py /usr/local/bin/cutadapt_wrapper.py
 ```
 ```
 mv galaxy-tool-cutadapt/*cutadapt.* /home/galaxy/galaxy/tools/identify/
+```
+Add the following line to /home/galaxy/galaxy/config/tool_conf.xml
+```
+<tool file="identify/cutadapt.xml" />
 ```
 ## Source
 
