@@ -1,5 +1,8 @@
 #!/bin/bash
-outlocation=$(mktemp -d /home/galaxy/ExtraRef/XXXXXX)
+#location for production server
+outlocation=$(mktemp -d /media/GalaxyData/database/files/XXXXXX)
+#location for the testserver
+#outlocation=$(mktemp -d /media/GalaxyData/files/XXXXXX)
 echo $outlocation
 if [ $3 == "forward_mode" ]
 then
