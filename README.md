@@ -30,6 +30,10 @@ sudo ln -s /home/galaxy/Tools/galaxy-tool-cutadapt/cutadapt_wrapper.py /usr/loca
 ```
 mv galaxy-tool-cutadapt/*cutadapt.* /home/galaxy/galaxy/tools/identify/
 ```
+Add the following line to /home/galaxy/galaxy/config/tool_conf.xml
+```
+<tool file="identify/cutadapt.xml" />
+```
 ## Source
 
 Martin, M. (2011). Cutadapt removes adapter sequences from high-throughput sequencing reads. EMBnet.Journal, 17(1), pp. 10-12. doi:http://dx.doi.org/10.14806/ej.17.1.200
