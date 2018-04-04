@@ -20,21 +20,28 @@ requiredArguments.add_argument('-i', '--input', metavar='input zipfile', dest='i
                                help='Inputfile in zip format', required=True)
 requiredArguments.add_argument('-t', '--input_type', metavar='FASTQ or GZ input', dest='input_type', type=str,
                                help='Sets the input type, gz or FASTQ', required=True)
-requiredArguments.add_argument('-advanced', '--advanced_mode', metavar='advanced input mode', dest='advanced', type=str,
-                               help='Use command line parameters', required=True, nargs='?', default="")
-requiredArguments.add_argument('-command_line', '--command_line_prarameters', metavar='advanced input mode', dest='command_line', type=str,
-                               help='Use command line parameters', required=True, nargs='?', default="")
+requiredArguments.add_argument('-fp', '--forward_primer', metavar='forward primer sequence', dest='forward_primer', type=str,
+                               help='Forward primer that needs to be trimmed off, only check the beginning of the sequence', required=False, nargs='?', default="")
+requiredArguments.add_argument('-rp', '--reverse_primer', metavar='reverse primer sequence', dest='reverse_primer', type=str,
+                               help='Reverse primer that need to be trimmed off', required=False, nargs='?', default="")
 requiredArguments.add_argument('-e', '--error_rate', metavar='error rate', dest='error_rate', type=str,
                                help='Accepted error rate for primer trimming', required=True, nargs='?', default="")
-requiredArguments.add_argument('-fp', '--forward_primer', metavar='forward primer sequence', dest='forward_primer', type=str,
-                               help='Forward primer that needs to be trimmed off, only check the beginning of the sequence', required=True, nargs='?', default="")
-requiredArguments.add_argument('-rp', '--reverse_primer', metavar='reverse primer sequence', dest='reverse_primer', type=str,
-                               help='Reverse primer that need to be trimmed off', required=True, nargs='?', default="")
 requiredArguments.add_argument('-l', '--min_length', metavar='minimum read length that will be written to the output file', dest='min_length', type=str,
                                help='minimum read length that will be written to the output file', required=True, nargs='?', default="")
+requiredArguments.add_argument('-O', '--overlap', metavar='Number of bases that need to overlap with the primer', dest='overlap', type=str,
+                               help='Number of bases that need to overlap with the primer', required=True, nargs='?', default="")
+
 #output folder
 requiredArguments.add_argument('-of', '--folder_output', metavar='folder output', dest='out_folder', type=str,
                                help='Folder name for the output files', required=True)
+#pre made primer trim strategies
+requiredArguments.add_argument('-ts', '--trim_strategy', metavar='trim strategy', dest='trim_strategy', type=str,
+                               help='trim strategies for trimming', required=False)
+requiredArguments.add_argument('-un', '--untrimmed', metavar='untrimmed', dest='untrimmed', type=str,
+                               help='Output the non-trimmed sequences', required=False)
+requiredArguments.add_argument('-command_line', '--command_line_prarameters', metavar='advanced input mode', dest='command_line', type=str,
+                               help='Use command line parameters', required=False, nargs='?', default="")
+
 
 args = parser.parse_args()
 
@@ -50,6 +57,8 @@ def make_output_folders(tempdir):
     call(["mkdir", "-p", tempdir])
     call(["mkdir", tempdir + "/files"])
     call(["mkdir", tempdir + "/output"])
+    call(["mkdir", tempdir + "/output/trimmed"])
+    call(["mkdir", tempdir + "/output/untrimmed"])
 
 def gunzip(tempdir):
     filetype = tempdir + "/files/*.gz"
@@ -78,27 +87,48 @@ def cutadapt(tempdir):
         files.extend([os.path.basename(x) for x in sorted(glob.glob(file))])
     for x in files:
         output_name = os.path.splitext(x)[0]+"_trimmed.fastq"
-        if args.advanced:
-            if "|" in command:
-                admin_log(tempdir, error="pipe sign not allowed", function="cutadapt")
+        output_name_untrimmed = os.path.splitext(x)[0] + "_untrimmed.fastq"
+
+        if args.trim_strategy == "forward_mode":
+            out, error = Popen(["cutadapt", "-g", args.forward_primer, "-e", args.error_rate, "-m", args.min_length, "-O", args.overlap ,"-o", tempdir+"/output/trimmed/"+output_name, "--untrimmed-output",tempdir+"/output/untrimmed/"+output_name_untrimmed ,tempdir+"/files/"+x], stdout=PIPE, stderr=PIPE).communicate()
+            admin_log(tempdir, out=out, error=error, function="cutadapt forward only")
+
+        if args.trim_strategy == "reverse_mode":
+            out, error = Popen(["cutadapt", "-a", args.reverse_primer, "-e", args.error_rate, "-m", args.min_length, "-O", args.overlap , "-o", tempdir+"/output/trimmed/"+output_name,"--untrimmed-output", tempdir+"/output/untrimmed/"+output_name_untrimmed, tempdir+"/files/"+x], stdout=PIPE, stderr=PIPE).communicate()
+            admin_log(tempdir, out=out, error=error, function="cutadapt reverse only")
+
+        if args.trim_strategy == "both_mode":
+            out, error = Popen(["cutadapt", "-g", args.forward_primer+"..."+args.reverse_primer, "-e", args.error_rate, "-m", args.min_length, "-O", args.overlap , "-o", tempdir+"/output/trimmed/"+output_name,"--untrimmed-output", tempdir+"/output/untrimmed/"+output_name_untrimmed, tempdir+"/files/"+x], stdout=PIPE, stderr=PIPE).communicate()
+            admin_log(tempdir, out=out, error=error, function="cutadapt both needs to be present")
+
+        if args.trim_strategy == "both_mode_anchored":
+            out, error = Popen(["cutadapt", "-a", args.forward_primer+"..."+args.reverse_primer+"$", "-e", args.error_rate, "-m", args.min_length, "-O", args.overlap , "-o", tempdir+"/output/trimmed/"+output_name,"--untrimmed-output", tempdir+"/output/untrimmed/"+output_name_untrimmed, tempdir+"/files/"+x], stdout=PIPE, stderr=PIPE).communicate()
+            admin_log(tempdir, out=out, error=error, function="cutadapt both needs to be present and anchored")
+        """
+        if args.trim_strategy == "advanced_mode":
+            if "|" in args.command_line:
+                admin_log(tempdir, error="pipe sign not allowed", function="cutadapt advanced")
             else:
                 command = args.command_line.split(" ")
                 base_command = ["cutadapt", "-o", tempdir + "/output/" + x]
                 base_command.extend(command)
                 base_command.append(tempdir + "/files/" + x)
-                out, error = Popen(base_command, stdout=PIPE,stderr=PIPE).communicate()
-        else:
-            out, error = Popen(["cutadapt","-a",args.forward_primer+"..."+args.reverse_primer,"-e", args.error_rate ,"--trimmed-only", "-m", args.min_length , "-o", tempdir+"/output/"+output_name, tempdir+"/files/"+x], stdout=PIPE, stderr=PIPE).communicate()
-        admin_log(tempdir, out=out, error=error, function="cutadapt")
+                out, error = Popen(base_command, stdout=PIPE, stderr=PIPE).communicate()
+                admin_log(tempdir, out=out, error=error, function="cutadapt advanced")
+        """
         call(["rm", tempdir + "/files/"+x])
 
 def zip_it_up(tempdir):
-    call(["zip","-r","-j", tempdir+"/trimmed.zip", tempdir+"/output/"],stdout=open(os.devnull, 'wb'))
-    #call(["mv", tempdir + ".zip", args.out])#
+    out, error = Popen(["zip", "-j","-r", tempdir+"/output/trimmed.zip", tempdir+"/output/trimmed/"], stdout=PIPE,stderr=PIPE).communicate()
+    admin_log(tempdir, out=out, error=error, function="zip it up")
+    if args.untrimmed == "yes":
+        out, error = Popen(["zip", "-j", "-r", tempdir + "/output/untrimmed.zip", tempdir + "/output/untrimmed/"], stdout=PIPE,stderr=PIPE).communicate()
+        admin_log(tempdir, out=out, error=error, function="zip it up untrimmed")
+
 
 def main():
-    #tempdir = Popen(["mktemp", "-d", "XXXXXX"], stdout=PIPE, stderr=PIPE).communicate()[0].strip()
     tempdir = args.out_folder
+    admin_log(tempdir, out=args.trim_strategy, function="trim strategy")
     make_output_folders(tempdir)
     zip_out, zip_error = Popen(["unzip", args.inzip, "-d", tempdir.strip() + "/files"], stdout=PIPE,stderr=PIPE).communicate()
     admin_log(tempdir, zip_out, zip_error)
@@ -106,10 +136,8 @@ def main():
         gunzip(tempdir)
     else:
         changename(tempdir)
-        cutadapt(tempdir)
+    cutadapt(tempdir)
     zip_it_up(tempdir)
-    #call(["mv", tempdir + "/adminlog.log", args.out_log])
-    #call(["rm", "-rf", tempdir])
 
 if __name__ == '__main__':
     main()
