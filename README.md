@@ -25,9 +25,6 @@ sudo git clone https://github.com/naturalis/galaxy-tool-cutadapt
 sudo chmod 777 galaxy-tool-cutadapt/cutadapt_wrapper.py
 ```
 ```
-sudo git clone https://github.com/naturalis/galaxy-tool-cutadapt
-```
-```
 sudo ln -s /home/galaxy/Tools/galaxy-tool-cutadapt/cutadapt_wrapper.py /usr/local/bin/cutadapt_wrapper.py
 ```
 ```
