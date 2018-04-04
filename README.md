@@ -22,7 +22,7 @@ cd /home/galaxy/Tools
 sudo git clone https://github.com/naturalis/galaxy-tool-cutadapt
 ```
 ```
-sudo chmod 777 galaxy-tool-flash/cutadapt_wrapper.py
+sudo chmod 777 galaxy-tool-cutadapt/cutadapt_wrapper.py
 ```
 ```
 sudo git clone https://github.com/naturalis/galaxy-tool-cutadapt
