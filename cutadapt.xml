@@ -88,6 +88,9 @@ $output_zip_untrimmed<!--untrimmed-->
 					<when value="both_mode_anchored">
 						<expand macro="both"/>
 					</when>
+					<when value="both_three_optional_mode">
+						<expand macro="both"/>
+					</when>
 				</conditional>
 
 
