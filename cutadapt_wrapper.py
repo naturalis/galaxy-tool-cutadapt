@@ -128,7 +128,7 @@ def cutadapt(tempdir):
 
         if args.trim_strategy == "both_three_optional_mode":
             out, error = Popen(["cutadapt", "-a", args.forward_primer+"..."+args.reverse_primer, "-e", args.error_rate, "-m", args.min_length, "-O", args.overlap , "-o", tempdir+"/output/trimmed/"+output_name,"--untrimmed-output", tempdir+"/output/untrimmed/"+output_name_untrimmed, tempdir+"/files/"+x], stdout=PIPE, stderr=PIPE).communicate()
-            admin_log(tempdir, out=out, error=error, function="cutadapt both needs to be present and anchored")
+            admin_log(tempdir, out=out, error=error, function="cutadapt both_three_optional_mode")
         """
         if args.trim_strategy == "advanced_mode":
             if "|" in args.command_line:
