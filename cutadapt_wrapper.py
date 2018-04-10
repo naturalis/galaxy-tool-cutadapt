@@ -4,7 +4,7 @@ Marten Hoogeveen    marten.hoogeveen@naturalis.nl V1.0
 
 This script is made for the Naturalis galaxy instance and is a wrapper for the tool cutadapt.(https://github.com/marcelm/cutadapt)
 Cutadapt finds and removes adapter sequences, primers, poly-A tails and other types of unwanted sequence from your high-throughput sequencing reads.
-The wrapper is made so it can process zip files containing multiple fastq files
+The wrapper is made so it can process zip files containing multiple fastq files.
 """
 import sys, os, argparse
 import glob
@@ -30,22 +30,25 @@ requiredArguments.add_argument('-l', '--min_length', metavar='minimum read lengt
                                help='minimum read length that will be written to the output file', required=True, nargs='?', default="")
 requiredArguments.add_argument('-O', '--overlap', metavar='Number of bases that need to overlap with the primer', dest='overlap', type=str,
                                help='Number of bases that need to overlap with the primer', required=True, nargs='?', default="")
-
-#output folder
 requiredArguments.add_argument('-of', '--folder_output', metavar='folder output', dest='out_folder', type=str,
                                help='Folder name for the output files', required=True)
-#pre made primer trim strategies
 requiredArguments.add_argument('-ts', '--trim_strategy', metavar='trim strategy', dest='trim_strategy', type=str,
                                help='trim strategies for trimming', required=False)
 requiredArguments.add_argument('-un', '--untrimmed', metavar='untrimmed', dest='untrimmed', type=str,
                                help='Output the non-trimmed sequences', required=False)
 requiredArguments.add_argument('-command_line', '--command_line_prarameters', metavar='advanced input mode', dest='command_line', type=str,
                                help='Use command line parameters', required=False, nargs='?', default="")
-
-
 args = parser.parse_args()
 
 def admin_log(tempdir, out=None, error=None, function=""):
+    """
+    A log file will be made and log data will be written to that file. Most of the time this is the stdout and stderror
+    of the shell. In the log it says if the message in is coming from stdout or stderror.
+    :param tempdir: the tempdir path that contains the log file
+    :param out: stdout or out message
+    :param error: stderror or error message
+    :param function: name of the function or step that generated the message
+    """
     with open(tempdir + "/adminlog.log", 'a') as adminlogfile:
         seperation = 60 * "="
         if out:
@@ -54,6 +57,10 @@ def admin_log(tempdir, out=None, error=None, function=""):
             adminlogfile.write("error " + function + "\n" + seperation + "\n" + error + "\n\n")
 
 def make_output_folders(tempdir):
+    """
+    Output en work folders are created. The wrapper uses these folders to save the files that are used between steps.
+    :param tempdir: tempdir path
+    """
     call(["mkdir", "-p", tempdir])
     call(["mkdir", tempdir + "/files"])
     call(["mkdir", tempdir + "/output"])
@@ -61,6 +68,11 @@ def make_output_folders(tempdir):
     call(["mkdir", tempdir + "/output/untrimmed"])
 
 def gunzip(tempdir):
+    """
+    If the input zip file contains gzip files they need to be gunzipped. The files are gunzipped and placed in the
+    files folder. The characters dash, dot and space are replaced by an underscore.
+    :param tempdir: tempdir path
+    """
     filetype = tempdir + "/files/*.gz"
     gzfiles = [os.path.basename(x) for x in sorted(glob.glob(filetype))]
     for x in gzfiles:
@@ -69,6 +81,11 @@ def gunzip(tempdir):
         call(["mv", tempdir + "/files/" + x[:-3], tempdir + "/files/" +gunzip_filename[0].translate((string.maketrans("-. " , "___")))+gunzip_filename[1]])
 
 def changename(tempdir):
+    """
+    The input file need to be renamed. The characters dash, dot and space are replaced by an underscore.
+    Only files with the extension fq or fastq are used.
+    :param tempdir:tempdir path
+    """
     fq_filetypes = [tempdir+"/files/*.fq", tempdir+"/files/*.fastq"]
     files = []
     for file in fq_filetypes:
@@ -81,6 +98,10 @@ def changename(tempdir):
 
 
 def cutadapt(tempdir):
+    """
+    This method loops trough all the fastq files and trims the primers per file.
+    :param tempdir:tempdir path
+    """
     fq_filetypes = [tempdir + "/files/*.fq", tempdir + "/files/*.fastq"]
     files = []
     for file in fq_filetypes:
