@@ -40,3 +40,11 @@ then
     rm -rf $outlocation
 fi
 
+if [ $3 == "both_three_optional_mode" ]
+then
+    cutadapt_wrapper.py -i $1 -t $2 -ts $3 -fp $4 -rp $5 -e $6 -l $7 -of $outlocation -un $8 -O $9
+    mv $outlocation"/output/trimmed.zip" "${10}"
+    cp $outlocation"/adminlog.log" "${11}"
+    [ $8 == "yes" ] && mv $outlocation"/output/untrimmed.zip" "${12}"
+    rm -rf $outlocation
+fi
