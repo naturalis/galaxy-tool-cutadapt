@@ -20,7 +20,7 @@ $type<!--input type, fastq or gz-->
 	    $setting_mode.output_untrimmed
 		$setting_mode.overlap
 	#end if
-	#if $setting_mode.mode == "both_mode" or $setting_mode.mode == "both_mode_anchored or $setting_mode.mode == "both_three_optional_mode"
+	#if $setting_mode.mode == "both_mode" or $setting_mode.mode == "both_mode_anchored" or $setting_mode.mode == "both_three_optional_mode"
 		$setting_mode.mode
 		$setting_mode.forward_primer<!--forward primer sequence-->
 		$setting_mode.reverse_primer<!--reverse primer sequence-->
@@ -29,15 +29,7 @@ $type<!--input type, fastq or gz-->
 	    $setting_mode.output_untrimmed
 		$setting_mode.overlap
 	#end if
-	#if $setting_mode.mode == "both_three_optional_mode"
-		$setting_mode.mode
-		$setting_mode.forward_primer<!--forward primer sequence-->
-		$setting_mode.reverse_primer<!--reverse primer sequence-->
-		$setting_mode.error_rate<!--max error rate-->
-		$setting_mode.min_length<!--minimum length-->
-	    $setting_mode.output_untrimmed
-		$setting_mode.overlap
-	#end if
+
 $output_zip<!--output zip-->
 $output_log<!--output log-->
 $output_zip_untrimmed<!--untrimmed-->
