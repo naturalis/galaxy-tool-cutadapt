@@ -28,7 +28,8 @@ sudo chmod 777 galaxy-tool-cutadapt/cutadapt_wrapper.py
 sudo ln -s /home/galaxy/Tools/galaxy-tool-cutadapt/cutadapt_wrapper.py /usr/local/bin/cutadapt_wrapper.py
 ```
 ```
-mv galaxy-tool-cutadapt/*cutadapt.* /home/galaxy/galaxy/tools/identify/
+sudo cp galaxy-tool-cutadapt/cutadapt.sh /home/galaxy/galaxy/tools/identify/cutadapt.sh
+sudo cp galaxy-tool-cutadapt/cutadapt.xml /home/galaxy/galaxy/tools/identify/cutadapt.xml
 ```
 Add the following line to /home/galaxy/galaxy/config/tool_conf.xml
 ```
