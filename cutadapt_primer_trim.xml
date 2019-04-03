@@ -1,7 +1,7 @@
 <tool id="cutadapt_primer_trim" name="Trim primers with cutadapt" version="0.1.0">
     <requirements>
-        <requirement type="package" version="py27h14c3975_1">cutadapt</requirement>
         <requirement type="package" version="2.7">python</requirement>
+        <requirement type="package" version="1.18">cutadapt</requirement>
         <requirement type="package">biopython</requirement>
     </requirements>
     <command><![CDATA[

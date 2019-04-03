@@ -3,7 +3,6 @@
 
 outlocation=$(mktemp -d /home/galaxy/galaxy/database/XXXXXX)
 SCRIPTDIR=$(dirname "$(readlink -f "$0")")
-
 if [ $3 == "forward_mode" ]
 then
     python $SCRIPTDIR"/cutadapt_wrapper.py" -i $1 -t $2 -ts $3 -fp $4 -e $5 -l $6 -of $outlocation -un $7 -O $8

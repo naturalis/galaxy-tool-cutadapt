@@ -1,4 +1,3 @@
-#!/usr/bin/python
 """
 Marten Hoogeveen    marten.hoogeveen@naturalis.nl V1.0
 
