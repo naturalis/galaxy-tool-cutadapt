@@ -1,39 +1,21 @@
 # galaxy-tool-cutadapt
-wrapper for cutadapt
+Wrapper for cutadapt, this repo can be used for the new (03-04-2019) galaxy 19.01 Naturalis server. The old galaxy 16.04 server is not supported anymore with this tool. Although cutadapt is also available from the toolshed, this specific wrapper fits better in the pipeline because it can handle zip files.
+
 ## Getting Started
-### Prerequisites
-Cutadapt need to be installed. Below are instruction to install cutadapt.
-```
-pip install --user --upgrade cutadapt
-```
-```
-sudo ln -s ~/.local/bin/cutadapt /usr/local/bin/cutadapt
-```
-Check the version, this should be at least version 1.6
-```
-cutadapt --version
-```
 ### Installing
 Installing the tool for use in Galaxy
 ```
 cd /home/galaxy/Tools
 ```
 ```
-sudo git clone https://github.com/naturalis/galaxy-tool-cutadapt
+git clone https://github.com/naturalis/galaxy-tool-cutadapt
 ```
 ```
 sudo chmod 777 galaxy-tool-cutadapt/cutadapt_wrapper.py
 ```
-```
-sudo ln -s /home/galaxy/Tools/galaxy-tool-cutadapt/cutadapt_wrapper.py /usr/local/bin/cutadapt_wrapper.py
-```
-```
-sudo cp galaxy-tool-cutadapt/cutadapt.sh /home/galaxy/galaxy/tools/identify/cutadapt.sh
-sudo cp galaxy-tool-cutadapt/cutadapt.xml /home/galaxy/galaxy/tools/identify/cutadapt.xml
-```
 Add the following line to /home/galaxy/galaxy/config/tool_conf.xml
 ```
-<tool file="identify/cutadapt.xml" />
+<tool file="/home/galaxy/Tools/galaxy-tool-cutadapt/cutadapt_primer_trim.xml" />
 ```
 ## Source
 
