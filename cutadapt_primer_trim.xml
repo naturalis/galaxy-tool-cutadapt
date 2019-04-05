@@ -70,7 +70,7 @@
 
 				<param name="type" type="select" multiple="false" label="Input type">
 					<option value="gz">gzip files</option>
-					<option value="FASTQ" selected="true">fastq files</option>
+					<option value="FASTQ" selected="true">fastq or fasta files</option>
 				</param>
 					<conditional name="setting_mode">
 					<param name="mode" type="select" multiple="false" label="Settings mode">

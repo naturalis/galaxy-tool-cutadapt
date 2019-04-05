@@ -17,7 +17,7 @@ requiredArguments = parser.add_argument_group('required arguments')
 
 requiredArguments.add_argument('-i', '--input', metavar='input zipfile', dest='inzip', type=str,
                                help='Inputfile in zip format', required=True)
-requiredArguments.add_argument('-t', '--input_type', metavar='FASTQ or GZ input', dest='input_type', type=str,
+requiredArguments.add_argument('-t', '--input_type', metavar='FASTQ, FASTA GZ input', dest='input_type', type=str,
                                help='Sets the input type, gz or FASTQ', required=True)
 requiredArguments.add_argument('-fp', '--forward_primer', metavar='forward primer sequence', dest='forward_primer', type=str,
                                help='Forward primer that needs to be trimmed off, only check the beginning of the sequence', required=False, nargs='?', default="")
@@ -85,7 +85,7 @@ def changename(tempdir):
     Only files with the extension fq or fastq are used.
     :param tempdir:tempdir path
     """
-    fq_filetypes = [tempdir+"/files/*.fq", tempdir+"/files/*.fastq"]
+    fq_filetypes = [tempdir+"/files/*.fq", tempdir+"/files/*.fastq",tempdir + "/files/*.fasta", tempdir + "/files/*.fa", tempdir + "/files/*.fna"]
     files = []
     for file in fq_filetypes:
         files.extend([os.path.basename(x) for x in sorted(glob.glob(file))])
@@ -101,13 +101,13 @@ def cutadapt(tempdir):
     This method loops trough all the fastq files and trims the primers per file.
     :param tempdir:tempdir path
     """
-    fq_filetypes = [tempdir + "/files/*.fq", tempdir + "/files/*.fastq"]
+    fq_filetypes = [tempdir + "/files/*.fq", tempdir + "/files/*.fastq",tempdir + "/files/*.fasta", tempdir + "/files/*.fa", tempdir + "/files/*.fna"]
     files = []
     for file in fq_filetypes:
         files.extend([os.path.basename(x) for x in sorted(glob.glob(file))])
     for x in files:
-        output_name = os.path.splitext(x)[0]+"_trimmed.fastq"
-        output_name_untrimmed = os.path.splitext(x)[0] + "_untrimmed.fastq"
+        output_name = os.path.splitext(x)[0]+"_trimmed."+str(os.path.splitext(x)[1])
+        output_name_untrimmed = os.path.splitext(x)[0] + "_untrimmed."+str(os.path.splitext(x)[1])
 
         if args.trim_strategy == "forward_mode":
             out, error = Popen(["cutadapt", "-g", args.forward_primer, "-e", args.error_rate, "-m", args.min_length, "-O", args.overlap ,"-o", tempdir+"/output/trimmed/"+output_name, "--untrimmed-output",tempdir+"/output/untrimmed/"+output_name_untrimmed ,tempdir+"/files/"+x], stdout=PIPE, stderr=PIPE).communicate()
@@ -165,6 +165,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-
-
