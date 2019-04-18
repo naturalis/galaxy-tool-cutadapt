@@ -4,6 +4,7 @@ Wrapper for cutadapt, this repo can be used for the new (03-04-2019) galaxy 19.0
 ## Getting Started
 ### Installing
 Installing the tool for use in Galaxy
+execute the following commands as user galaxy
 ```
 cd /home/galaxy/Tools
 ```
@@ -11,7 +12,7 @@ cd /home/galaxy/Tools
 git clone https://github.com/naturalis/galaxy-tool-cutadapt
 ```
 ```
-sudo chmod 777 galaxy-tool-cutadapt/cutadapt_wrapper.py
+chmod 777 galaxy-tool-cutadapt/cutadapt_wrapper.py
 ```
 Add the following line to /home/galaxy/galaxy/config/tool_conf.xml
 ```
