@@ -3,7 +3,8 @@ Wrapper for cutadapt, this repo can be used for the new (03-04-2019) galaxy 19.0
 
 ## Getting Started
 ### Installing
-Installing the tool for use in Galaxy /n
+Installing the tool for use in Galaxy
+
 execute the following commands as user galaxy
 ```
 cd /home/galaxy/Tools
