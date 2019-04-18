@@ -1,4 +1,4 @@
-<tool id="cutadapt_primer_trim" name="Trim primers with cutadapt" version="0.1.0">
+<tool id="cutadapt_primer_trim" name="Trim primers" version="0.1.0">
     <requirements>
         <requirement type="package" version="2.7">python</requirement>
         <requirement type="package" version="1.18">cutadapt</requirement>
@@ -70,7 +70,7 @@
 
 				<param name="type" type="select" multiple="false" label="Input type">
 					<option value="gz">gzip files</option>
-					<option value="FASTQ" selected="true">fastq or fasta files</option>
+					<option value="FASTQ" selected="true">fastq files</option>
 				</param>
 					<conditional name="setting_mode">
 					<param name="mode" type="select" multiple="false" label="Settings mode">
@@ -105,7 +105,10 @@
   <filter>setting_mode['output_untrimmed']</filter>
 </data>
     </outputs>
-    <help><![CDATA[
-        Trim primers
-    ]]></help>
+    <help>
+        **Trim primers with Cutadapt**
+    </help>
+	<citations>
+	   <citation type="doi">10.14806/ej.17.1.200</citation>
+	</citations>
 </tool>
