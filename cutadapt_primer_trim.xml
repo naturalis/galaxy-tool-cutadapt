@@ -40,21 +40,21 @@
     ]]></command>
     <macros>
 	<macro name="forward">
-		<param name="overlap" type="integer" label="Minimum number of bases that need to match" value="5" min="1" max="50"/>
+		<param name="overlap" type="integer" label="Minimum number of bases that need to match" value="5" min="1" max="100"/>
 		<param name="error_rate" type="float" label="maximum allowed error rate for primer trimming"  value="0.2" min="0.0" max="1"/>
 		<param name="min_length" type="integer" label="Minimum read length"  value="10" min="0" max="999"/>
 		<param name="forward_primer" type="text" size="30" label="Forward primer sequence" />
 		<param name="output_untrimmed" type="boolean" label="Output untrimmed sequences" checked="no" truevalue="yes" falsevalue="no"/>
 	</macro>
 	<macro name="reverse">
-		<param name="overlap" type="integer" label="Minimum number of bases that need to match" value="5" min="1" max="50"/>
+		<param name="overlap" type="integer" label="Minimum number of bases that need to match" value="5" min="1" max="100"/>
 		<param name="error_rate" type="float" label="maximum allowed error rate for primer trimming"  value="0.2" min="0.0" max="1"/>
 		<param name="min_length" type="integer" label="Minimum read length"  value="10" min="0" max="999"/>
 		<param name="reverse_primer" type="text" size="30" label="reverse primer sequence" />
 		<param name="output_untrimmed" type="boolean" label="Output untrimmed sequences" checked="no" truevalue="yes" falsevalue="no"/>
 	</macro>
 	<macro name="both">
-		<param name="overlap" type="integer" label="Minimum number of bases that need to match" value="5" min="1" max="50"/>
+		<param name="overlap" type="integer" label="Minimum number of bases that need to match" value="5" min="1" max="100"/>
 		<param name="error_rate" type="float" label="maximum allowed error rate for primer trimming"  value="0.2" min="0.0" max="1"/>
 		<param name="min_length" type="integer" label="Minimum read length"  value="10" min="0" max="999"/>
 		<param name="forward_primer" type="text" size="30" label="Forward primer sequence" />
