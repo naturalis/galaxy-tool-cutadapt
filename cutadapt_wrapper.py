@@ -1,10 +1,15 @@
 """
-Marten Hoogeveen    marten.hoogeveen@naturalis.nl V1.0
+Marten Hoogeveen    V1.0
 
 This script is made for the Naturalis galaxy instance and is a wrapper for the tool cutadapt.(https://github.com/marcelm/cutadapt)
 Cutadapt finds and removes adapter sequences, primers, poly-A tails and other types of unwanted sequence from your high-throughput sequencing reads.
 The wrapper is made so it can process zip files containing multiple fastq files.
+
 """
+# according to 2to3 this script is compatible with Python3
+# adjustments were required because of strict separation between strings and binary data in Python3
+# due to the upgrade to cutadapt v.2.x the syntax for anchored adaptors changed (5' now preceded with ^)
+
 import sys, os, argparse
 import glob
 import string
@@ -51,9 +56,11 @@ def admin_log(tempdir, out=None, error=None, function=""):
     with open(tempdir + "/adminlog.log", 'a') as adminlogfile:
         seperation = 60 * "="
         if out:
-            adminlogfile.write("out "+ function + " \n" + seperation + "\n" + out + "\n\n")
+            #adminlogfile.write("out "+ function + " \n" + seperation + "\n" + out + "\n\n")
+            adminlogfile.write("out "+ str(function) + " \n" + str(seperation) + "\n" + out.decode() + "\n\n")
         if error:
-            adminlogfile.write("error " + function + "\n" + seperation + "\n" + error + "\n\n")
+            #adminlogfile.write("error " + function + "\n" + seperation + "\n" + error + "\n\n")
+            adminlogfile.write("error " + str(function) + "\n" + str(seperation) + "\n" + str(error) + "\n\n")
 
 def make_output_folders(tempdir):
     """
@@ -77,7 +84,8 @@ def gunzip(tempdir):
     for x in gzfiles:
         call(["gunzip", tempdir + "/files/" + x])
         gunzip_filename = os.path.splitext(x[:-3])
-        call(["mv", tempdir + "/files/" + x[:-3], tempdir + "/files/" +gunzip_filename[0].translate((string.maketrans("-. " , "___")))+gunzip_filename[1]])
+        #call(["mv", tempdir + "/files/" + x[:-3], tempdir + "/files/" +gunzip_filename[0].translate((string.maketrans("-. " , "___")))+gunzip_filename[1]])
+        call(["mv", tempdir + "/files/" + x[:-3], tempdir + "/files/" +gunzip_filename[0].translate((str.maketrans("-. " , "___")))+gunzip_filename[1]])
 
 def changename(tempdir):
     """
@@ -91,7 +99,8 @@ def changename(tempdir):
         files.extend([os.path.basename(x) for x in sorted(glob.glob(file))])
     for x in files:
         filename = os.path.splitext(x)
-        fastq_filename = filename[0].translate((string.maketrans("-. ", "___"))) + filename[1]
+        #fastq_filename = filename[0].translate((string.maketrans("-. ", "___"))) + filename[1]
+        fastq_filename = filename[0].translate((str.maketrans("-. ", "___"))) + filename[1]
         if x != fastq_filename:
             call(["mv", tempdir + "/files/" + x,tempdir + "/files/" + fastq_filename])
 
@@ -122,7 +131,7 @@ def cutadapt(tempdir):
             admin_log(tempdir, out=out, error=error, function="cutadapt both needs to be present")
 
         if args.trim_strategy == "both_mode_anchored":
-            out, error = Popen(["cutadapt", "-a", args.forward_primer+"..."+args.reverse_primer+"$", "-e", args.error_rate, "-m", args.min_length, "-O", args.overlap , "-o", tempdir+"/output/trimmed/"+output_name,"--untrimmed-output", tempdir+"/output/untrimmed/"+output_name_untrimmed, tempdir+"/files/"+x], stdout=PIPE, stderr=PIPE).communicate()
+            out, error = Popen(["cutadapt", "-a", "^"+args.forward_primer+"..."+args.reverse_primer+"$", "-e", args.error_rate, "-m", args.min_length, "-O", args.overlap , "-o", tempdir+"/output/trimmed/"+output_name,"--untrimmed-output", tempdir+"/output/untrimmed/"+output_name_untrimmed, tempdir+"/files/"+x], stdout=PIPE, stderr=PIPE).communicate()
             admin_log(tempdir, out=out, error=error, function="cutadapt both needs to be present and anchored")
 
         if args.trim_strategy == "both_three_optional_mode":
@@ -152,7 +161,7 @@ def zip_it_up(tempdir):
 
 def main():
     tempdir = args.out_folder
-    admin_log(tempdir, out=args.trim_strategy, function="trim strategy")
+    admin_log(tempdir, out=(args.trim_strategy).encode(), function="trim strategy")
     make_output_folders(tempdir)
     zip_out, zip_error = Popen(["unzip", args.inzip, "-d", tempdir.strip() + "/files"], stdout=PIPE,stderr=PIPE).communicate()
     admin_log(tempdir, zip_out, zip_error)
