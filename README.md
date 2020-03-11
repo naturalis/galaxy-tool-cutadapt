@@ -1,5 +1,5 @@
 # galaxy-tool-cutadapt
-Wrapper for Cutadapt v.2.8. This repo supports Python3 and has been tested with Galaxy v.19.09 (also expected to work with Galaxy v.20 as well). In contrast to cutadapt from the toolshed, this wrapper will handle zip files.
+Wrapper for Cutadapt v.2.8. This repo supports Python3 and has been tested with Galaxy v.19.09 (expected to work with Galaxy v.20 as well). In contrast to cutadapt from the toolshed, this wrapper will handle zip files.
 
 ## Getting Started
 ### Installing
