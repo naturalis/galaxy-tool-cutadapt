@@ -1,5 +1,5 @@
 # galaxy-tool-cutadapt
-Wrapper for cutadapt, this repo can be used for the new (03-04-2019) galaxy 19.01 Naturalis server. The old galaxy 16.04 server is not supported anymore with this tool. Although cutadapt is also available from the toolshed, this specific wrapper fits better in the pipeline because it can handle zip files.
+Wrapper for cutadapt v.2.8 This repo supports Python3 and has been tested with Galaxy v.19.09 (also expected to work with Galaxy v.20). In contrast to cutadapt from the toolshed, this wrapper handles zip files as well.
 
 ## Getting Started
 ### Installing
