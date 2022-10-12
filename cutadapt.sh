@@ -1,5 +1,11 @@
 #!/bin/bash
 
+# sanity check
+printf "Conda env: $CONDA_DEFAULT_ENV\n"
+printf "Python version: $(python --version)\n"
+printf "Biopython version: $(conda list | egrep biopython | awk '{print $2}')\n"
+printf "Bash version: ${BASH_VERSION}\n\n"
+
 outlocation=$(mktemp -d /data/files/XXXXXX)
 SCRIPTDIR=$(dirname "$(readlink -f "$0")")
 if [ $3 == "forward_mode" ]
