@@ -8,7 +8,7 @@ Clone this repo in your Galaxy ***Tools*** directory:
 `git clone https://github.com/naturalis/galaxy-tool-cutadapt`  
 
 Make the python script executable:  
-`chmod 777 galaxy-tool-cutadapt/cutadapt_wrapper.py`  
+`chmod 755 galaxy-tool-cutadapt/cutadapt_wrapper.py`  
 
 Append the file ***tool_conf.xml***:    
 `<tool file="/path/to/Tools/galaxy-tool-cutadapt/cutadapt_primer_trim.xml" />`
