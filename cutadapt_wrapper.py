@@ -62,7 +62,7 @@ def admin_log(tempdir, out=None, error=None, function=""):
         else:
             adminlogfile.write("out "+ str(function) + " \n" + str(separation) + "\n" + out.decode() + "\n\n")
         if error:
-            adminlogfile.write("error " + str(function) + "\n" + str(saperation) + "\n" + str(error) + "\n\n")
+            adminlogfile.write("error " + str(function) + "\n" + str(separation) + "\n" + str(error) + "\n\n")
 
 def make_output_folders(tempdir):
     """
