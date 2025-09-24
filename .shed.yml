@@ -1,0 +1,14 @@
+name: naturalis_cutadapt
+owner:  duijker.d
+description: "Wrapper for Cutadapt v.2.8; customized to handle zipped input" 
+long_description: |
+  "Wrapper for Cutadapt v.2.8. This repo supports Python3 and has been tested with Galaxy v.22.01. 
+  In contrast to cutadapt from the toolshed, this wrapper will handle zip files.".
+remote_repository_url: https://github.com/naturalis/galaxy-tool-cutadapt.git
+homepage_url: https://github.com/naturalis/galaxy-tool-cutadapt.git
+type: unrestricted
+categories:
+   - "Sequence Analysis"
+auto_tool_repositories:
+  name_template: naturalis_cutadapt
+  description_template: naturalis_cutadapt
